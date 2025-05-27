@@ -1,10 +1,10 @@
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Cog, CogIcon, LayoutGrid, SettingsIcon } from 'lucide-react';
+import { BadgeDollarSignIcon, Cog, CogIcon, LayoutGrid, SettingsIcon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -13,13 +13,25 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
+    {
+        title: 'Ventes',
+        href: '#',
+        icon: BadgeDollarSignIcon,
+        permission: 'ventes.index',
+        children: [
+            {title: 'Clients', href: '/ventes/clients', permission: 'clients.index'},
+        ]
+    }
 ];
+
+
 
 const footerNavItems: NavItem[] = [
     {
         title: 'Administration',
         href: '/administration',
         icon: SettingsIcon,
+        permission: 'administration.index'
     },
 ];
 
