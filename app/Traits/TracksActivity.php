@@ -26,6 +26,9 @@ trait TracksActivity
             'deleted' => 'supprimé',
             default => ''
         };
-        return class_basename($this) . " a été {$action} par " . auth()->user()->name;
+
+        $userName = auth()->check() ? auth()->user()->name : 'le système';
+        
+        return class_basename($this) . " a été {$action} par {$userName}";
     }
 }

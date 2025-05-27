@@ -1,0 +1,124 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+use App\Models\User;
+use Tests\Traits\TestsWithPermissions;
+use App\Models\{{ modelName }};
+
+class {{ modelName }}sTest extends TestCase
+{
+    use RefreshDatabase, TestsWithPermissions;
+
+    public function test_user_can_create_{{ slug }}()
+    {
+        $user = $this->createUserWithPermission('{{ slug }}.index');
+
+        $response = $this->actingAs($user)->post('/{{ routePrefix }}/{{ slug }}', [
+            'name' => '{{ modelName }} 1',
+        ]);
+
+        $response->assertInertia(fn ($page) =>
+            $page->component('{{ routePrefix }}/{{ slug }}/[id]/edit')
+                ->where('{{ variable }}.name', '{{ modelName }} 1')
+        );
+
+        $this->assertDatabaseHas('{{ table }}', [
+            'name' => '{{ modelName }} 1',
+        ]);
+    }
+
+    public function test_user_can_view_{{ slug }}s()
+    {
+        $user = $this->createUserWithPermission('{{ slug }}.index');
+
+        $model = {{ modelName }}::create(['name' => '{{ modelName }} 1']);
+        $archived = {{ modelName }}::create(['name' => '{{ modelName }} 2']);
+        $archived->delete();
+
+        $response = $this->actingAs($user)->get('/{{ routePrefix }}/{{ slug }}');
+
+        $response->assertInertia(fn ($page) =>
+            $page->component('{{ routePrefix }}/{{ slug }}/index')
+                ->has('{{ slug }}', 1)
+                ->where('{{ slug }}.0.id', $model->id)
+                ->where('{{ slug }}.0.name', $model->name)
+                ->where('{{ slug }}', fn ($items) =>
+                    !collect($items)->pluck('id')->contains($archived->id)
+                )
+        );
+    }
+
+    public function test_user_can_edit_{{ slug }}()
+    {
+        $user = $this->createUserWithPermission('{{ slug }}.index');
+
+        $model = {{ modelName }}::create(['name' => '{{ modelName }} 1']);
+
+        $response = $this->actingAs($user)->get("/{{ routePrefix }}/{{ slug }}/{$model->id}/edit");
+
+        $response->assertInertia(fn ($page) =>
+            $page->component('{{ routePrefix }}/{{ slug }}/[id]/edit')
+                ->where('{{ variable }}.id', $model->id)
+                ->where('{{ variable }}.name', $model->name)
+        );
+    }
+
+    public function test_user_can_update_{{ slug }}()
+    {
+        $user = $this->createUserWithPermission('{{ slug }}.index');
+
+        $model = {{ modelName }}::create(['name' => '{{ modelName }} 1']);
+
+        $response = $this->actingAs($user)->put("/{{ routePrefix }}/{{ slug }}/{$model->id}", [
+            'name' => '{{ modelName }} 2',
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success', '{{ modelName }} mis à jour avec succès');
+
+        $this->assertDatabaseHas('{{ table }}', [
+            'name' => '{{ modelName }} 2',
+        ]);
+    }
+
+    public function test_user_can_archive_{{ slug }}()
+    {
+        $user = $this->createUserWithPermission('{{ slug }}.index');
+
+        $model = {{ modelName }}::create(['name' => '{{ modelName }} 1']);
+
+        $response = $this->actingAs($user)->put("/{{ routePrefix }}/{{ slug }}/{$model->id}/archive");
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success', '{{ modelName }} archivé avec succès');
+
+        $this->assertDatabaseHas('{{ table }}', [
+            'id' => $model->id,
+            'archived' => 1,
+        ]);
+    }
+
+    public function test_user_can_unarchive_{{ slug }}()
+    {
+        $user = $this->createUserWithPermission('{{ slug }}.index');
+
+        $model = {{ modelName }}::create([
+            'name' => '{{ modelName }} 1',
+            'archived' => 1,
+        ]);
+
+        $response = $this->actingAs($user)->put("/{{ routePrefix }}/{{ slug }}/{$model->id}/unarchive");
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success', '{{ modelName }} désarchivé avec succès');
+
+        $this->assertDatabaseHas('{{ table }}', [
+            'id' => $model->id,
+            'archived' => 0,
+        ]);
+    }
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ruleset name="CustomRules">
+  <rule ref="PSR12">
+    <!-- Disable brace placement error -->
+    <exclude name="Squiz.Functions.FunctionDeclaration.BraceOnSameLine" />
+
+    <!-- Disable missing doc comment -->
+    <exclude name="Squiz.Commenting.FunctionComment.Missing" />
+  </rule>
+</ruleset>
+

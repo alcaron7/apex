@@ -1,0 +1,63 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Requests\{{ pluralClass }}\Store{{ class }}Request;
+use App\Http\Requests\{{ pluralClass }}\Update{{ class }}Request;
+use App\Models\{{ class }};
+use Inertia\Inertia;
+use App\Services\ActivityLogFormatter;
+
+
+class {{ pluralClass }}Controller extends Controller
+{
+    public function index()
+    {
+        ${{ variablePlural }} = {{ class }}::orderBy('name')->get();
+        return Inertia::render('{{ viewFolder }}/index', ['{{ variablePlural }}' => ${{ variablePlural }}]);
+    }
+
+    public function store(Store{{ class }}Request $request)
+    {
+        ${{ variable }} = {{ class }}::create($request->all());
+
+        return Inertia::render('{{ viewFolder }}/[id]/edit', [
+            '{{ variable }}' => ${{ variable }},
+            'success' => '{{ class }} créé avec succès'
+        ]);
+    }
+
+    public function edit({{ class }} ${{ variable }})
+    {
+        return Inertia::render('{{ viewFolder }}/[id]/edit', [
+            '{{ variable }}' => ${{ variable }}
+        ]);
+    }
+
+    public function update(Update{{ class }}Request $request, {{ class }} ${{ variable }})
+    {
+        ${{ variable }}->update($request->all());
+
+        return back()->with('success', '{{ class }} mis à jour avec succès');
+    }
+
+    public function archive({{ class }} ${{ variable }})
+    {
+        ${{ variable }}->update(['archived' => true]);
+        return back()->with('success', '{{ class }} archivié avec succès');
+    }
+
+    public function unarchive({{ class }} ${{ variable }})
+    {
+        ${{ variable }}->update(['archived' => false]);
+        return back()->with('success', '{{ class }} désarchivié avec succès');
+    }
+
+    public function history({{ class }} ${{ variable }})
+    {
+        $history = ActivityLogFormatter::paginate(${{ variable }});
+        return response()->json($history);
+    }
+}

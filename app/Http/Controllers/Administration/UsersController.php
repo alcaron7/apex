@@ -36,9 +36,8 @@ class UsersController extends Controller
             }
         }
 
-        return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès');
+        return redirect()->route('administration.users.index')->with('success', 'Utilisateur créé avec succès');
     }
-
 
     public function update(UpdateUserRequest $request, User $user)
     {
@@ -86,14 +85,14 @@ class UsersController extends Controller
     {
         $user->archived = true;
         $user->save();
-        return redirect()->route('users.index')->with('success', 'Utilisateur archivé avec succès');
+        return redirect()->route('administration.users.index')->with('success', 'Utilisateur archivé avec succès');
     }
 
     public function unarchive(User $user)
     {
         $user->archived = false;
         $user->save();
-        return redirect()->route('users.index')->with('success', 'Utilisateur désarchivé avec succès');
+        return redirect()->route('administration.users.index')->with('success', 'Utilisateur désarchivé avec succès');
     }
 
     public function history(User $user)

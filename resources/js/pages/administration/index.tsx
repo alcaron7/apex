@@ -4,7 +4,7 @@ import { useCan } from "@/hooks/use-permissions";
 import AppLayout from "@/layouts/app-layout";
 import { BreadcrumbItem } from "@/types";
 import { Head, Link } from "@inertiajs/react";
-import { ChevronRight, Lock, Shield, Users } from "lucide-react";
+import { ChevronRight, File, Lock, Palette, PaintRoller, Shield, Truck, Users } from "lucide-react";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -21,11 +21,10 @@ export default function Administration() {
             {/* Authentification et sécurité */}
             <div className="px-4 py-6">
                 <Heading title="Authentification et sécurité" description="Gérez vos utilisateurs et leurs accès" />
-                <div className="flex flex-row gap-4">
-
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {/* Utilisateurs */}
                     {useCan('users.index') && (
-                        <Link href="/administration/users" className="w-1/4">
+                        <Link href="/administration/users">
                             <Card>
                                 <CardHeader>
                                 <CardTitle>
@@ -49,7 +48,7 @@ export default function Administration() {
 
                     {/* Rôles */}
                     {useCan('roles.index') && (
-                        <Link href="/administration/roles" className="w-1/4">
+                        <Link href="/administration/roles">
                         <Card>
                             <CardHeader>
                                 <CardTitle>
@@ -70,6 +69,16 @@ export default function Administration() {
                             </Card>
                         </Link>
                     )}
+                </div>
+
+            </div>
+
+
+            {/* Configurations diverses */}
+            <div className="px-4 py-6">
+                <Heading title="Configurations diverses" description="Gérez vos configurations diverses" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
                 </div>
             </div>
         </AppLayout>
