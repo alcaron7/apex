@@ -11,6 +11,7 @@ use App\Http\Requests\Roles\StoreRoleRequest;
 
 class RolesController extends Controller
 {
+
     public function index()
     {
         $roles = Role::orderBy('name')->get();
@@ -40,10 +41,11 @@ class RolesController extends Controller
         return back()->with('success', 'Rôle mis à jour avec succès');
     }
 
+
     public function store(StoreRoleRequest $request)
     {
         $role = Role::create($request->all());
-        return redirect()->route('roles.edit', $role->id)->with([
+        return redirect()->route('administration.roles.edit', $role->id)->with([
             'success' => 'Rôle créé avec succès',
             'created_role_id' => $role->id,
         ]);

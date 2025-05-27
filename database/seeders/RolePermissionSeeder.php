@@ -19,6 +19,15 @@ class RolePermissionSeeder extends Seeder
         $permissions = [
             'users.index' => 'Gérer les utilisateurs',
             'roles.index' => 'Gérer les rôles',
+            'transporteurs.index' => 'Gérer les transporteurs',
+            'collections.index' => 'Gérer les collections',
+            'couleurs.index' => 'Gérer les couleurs',
+            'finitions.index' => 'Gérer les finitions',
+            'fournisseurs.index' => 'Gérer les fournisseurs',
+            'clients.index' => 'Gérer les clients',
+            'administration.index' => 'Voir l\'administration',
+            'ventes.index' => 'Voir le menu Ventes',
+            'representants.index' => 'Gérer les representants',
         ];
 
         foreach ($permissions as $name => $displayName) {
@@ -27,7 +36,7 @@ class RolePermissionSeeder extends Seeder
                 ['display_name' => $displayName]
             );
         }
-    
+
         $superAdminRole = Role::firstOrCreate(['name' => 'Super-Administrateur']);
         $superAdminRole->syncPermissions(array_keys($permissions));
     }
